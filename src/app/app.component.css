@@ -1,0 +1,22 @@
+div {font-family: Verdana, Geneva, Tahoma, sans-serif}
+ #w100{ width: 90%;
+  border: 2px solid red;
+  background-color: white;
+  float:left;
+}
+  #w60{
+    background-color: white;
+    border: 2px solid red;
+    width: 59%;
+    min-width: 600px;
+    float: left;
+  }
+  #w20{
+
+    background-color: white;
+    border: 2px solid red;
+    width: 20%;
+    min-width: 200px;
+    height: 600px;
+    float: left;
+  }
