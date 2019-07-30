@@ -37,17 +37,19 @@ export interface Igeoinhalt {
 })
 export class LadenService {
   ladeurl: string = '../../assets/berlin.geojson';
+  public printGeoinhalt():string {
+    let druck: string;
+    druck = 'leer';
+    return druck;
+  }
+
 
   constructor(
     private http: HttpClient,
     private messageService: MessageService) { }
 
 
-  public printGeoinhalt():string {
-    let druck: string;
-    druck = 'leer';
-    return druck;
-  }
+
 
   private log(message: string) {
     this.messageService.add(`LadeService: ${message}`);

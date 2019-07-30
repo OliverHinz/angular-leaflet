@@ -1,13 +1,10 @@
-import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {Igeoinhalt} from '../interfaces/geoinhalt';
-import { LadenService } from '../laden/laden.service';
-import { Observable } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
 import * as L from 'leaflet';
-import { strictEqual } from 'assert';
-import { stringify } from '@angular/core/src/util';
-import { StringifyOptions } from 'querystring';
-import { GeoJSON, GeoJsonObject } from 'geojson';
+import { Observable } from 'rxjs';
+import { Igeoinhalt } from '../interfaces/geoinhalt';
+import {GeoJSON, GeoJsonObject} from 'geojson';
+import { LadenService } from '../laden/laden.service';
 
 // declare let L;
 
@@ -20,11 +17,16 @@ import { GeoJSON, GeoJsonObject } from 'geojson';
 export class MapComponent implements OnInit {
   constructor(private http: HttpClient ) {}
 
-  private test: GeoJSON;
+  private myIgeoinhalt: Igeoinhalt;
+  private myAny: any;
+  private myGeoJson: GeoJSON;
+  private myGeoJsonOb: GeoJsonObject;
+  private myString: string;
+
 
   // public wandel(): string{
   //   let antwort = '';
-  //   antwort = '{"type": "'+this.test.type+'",'
+  //   antwort = '{"type": "'+this.myIgeoinhalt.type+'",'
   //   return antwort;
   // }
 
@@ -320,6 +322,8 @@ export class MapComponent implements OnInit {
     ]
   }];
 
+  private giBerlin = [];
+
   private berlinStyle = {
     background: 'red',
     color: 'red',
@@ -327,23 +331,46 @@ export class MapComponent implements OnInit {
     opacity: 0.5
   };
 
+  private gmlid: any;
+
   private linienStyle = {
     color: '#ff7800',
     weight: 5,
     opacity: 0.65
   };
 
-
+  private geoinhalte = [];
 
   ngOnInit() {
-    this.getJSON().subscribe((data) => {
-      console.log('mapFromJSON1', data.type);
+    // this.getJSON().subscribe((data) => {
+    //   console.log('mapFromJSON1', data.type);
 
-      this.test = data;
-      console.log('mapFromJSON1', this.test.type);
-      console.log('mapFromJSON2', this.test.crs.type);
+    //   this.myIgeoinhalt = data;
+    //   console.log('mapFromJSON1', this.myIgeoinhalt.type);
+    //   console.log('mapFromJSON2', this.myIgeoinhalt.);
 
-    });
+    // });
+
+    this.getJSON().subscribe((res : Array<Object>)=>{
+
+      this.myGeoJsonOb = res as any as GeoJsonObject;
+      console.log('nach any',this.myGeoJsonOb);
+      // this.myIgeoinhalt = this.geoinhalte as any as Igeoinhalt;
+      // this.myAny = this.myIgeoinhalt.features[4];
+      // console.log('mygeo', this.myAny.geometry.coordinates);
+      // console.log('myIG', this.myIgeoinhalt.features[0]);
+       this.myGeoJson = this.giBerlin as any as GeoJSON;
+
+       this.gmlid = this.myGeoJsonOb as unknown as any;
+       //console.log('mygeo', this.myGeoJsonOb.properties.gml_id);
+       console.log('mygeo1', this.gmlid);
+       console.log('berlinStyle', this.berlinStyle);
+       console.log('map', map);
+       L.geoJSON(this.gmlid as GeoJSON, { style: this.berlinStyle}).addTo(map);
+
+  });
+
+
 
     const map = L.map('map').setView([52.526578, 13.413247], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -354,9 +381,20 @@ export class MapComponent implements OnInit {
 
     L.geoJSON(this.myLines, {style: this.linienStyle}).addTo(map);
 
-    L.geoJSON(this.myShapes, { style: this.berlinStyle}).addTo(map);
+   // L.geoJSON(this.myShapes, { style: this.berlinStyle}).addTo(map);
 
-    L.geoJSON(this.test, { style: this.berlinStyle}).addTo(map);
+   // L.geoJSON(this.myBerlin as any as GeoJSON, { style: this.berlinStyle}).addTo(map);
+
+    L.geoJSON(this.myGeoJsonOb as any as GeoJSON, { style: this.berlinStyle}).addTo(map);
+
+
+
+
+    // this.http.get('../../assets/berlin.geojson').subscribe((data: any) => {
+    //   data.records.forEach(podotactile => {
+    //     L.marker([podotactile.geometry.coordinates[1], podotactile.geometry.coordinates[0]], {icon: myIcon}).addTo(myfrugalmap);
+    //   });
+    // });
 
     // 52.526578, 13.413247
   }
